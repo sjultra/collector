@@ -1,0 +1,14 @@
+{{- range $file, $json := .Values.dashboards }}
+---
+# loaded by Grafana's dashboard sidecar from any namespace; removed with the release
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $.Release.Name }}-dashboard-{{ trimSuffix ".json" $file | lower }}
+  labels:
+    app: {{ $.Release.Name }}
+    grafana_dashboard: "1"
+data:
+  {{ $file }}: |-
+    {{- $json | nindent 4 }}
+{{- end }}

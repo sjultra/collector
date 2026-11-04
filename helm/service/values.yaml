@@ -1,0 +1,30 @@
+# Default values for the collector: one Telegraf agent. An install supplies its
+# inputs (what to measure) and dashboards; the agent and output are the chart's.
+
+image:
+  repository: telegraf                  # the official image (amd64 + arm64)
+  tag: "1.40.3-alpine"                  # pinned (not `latest`)
+  pullPolicy: IfNotPresent
+
+# Telegraf input plugins, as TOML, appended to the agent's config. May use
+# ${VAR} from `env`, e.g. interval = "${INTERVAL}". Required.
+inputs: ""
+
+# Environment for the agent, e.g. settings the inputs read: { INTERVAL: "1h" }
+env: {}
+
+# Where metrics go: InfluxDB line protocol to Monitoring's ingest endpoint
+output:
+  url: http://ingest.victoriametrics.svc:8428
+
+# Grafana dashboards, by file name: { "speedtest.json": "<dashboard JSON>" }.
+# Each becomes a ConfigMap labeled grafana_dashboard: "1", which Grafana's
+# dashboard sidecar loads from any namespace.
+dashboards: {}
+
+resources: {}
+
+# deployment target(s)
+nodeSelector: {}
+affinity: {}
+tolerations: []

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}
+data:
+  telegraf.conf: |
+    [agent]
+      # the node, not the pod, so series survive restarts
+      hostname = "${NODE_NAME}"
+
+    [[outputs.influxdb]]
+      urls = [{{ .Values.output.url | quote }}]
+      skip_database_creation = true   # VictoriaMetrics has no databases
+    {{ required "inputs is required: the Telegraf input plugins to run" .Values.inputs | nindent 4 }}
