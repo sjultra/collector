@@ -9,6 +9,9 @@ data:
     [agent]
       # the node, not the pod, so series survive restarts
       hostname = "${NODE_NAME}"
+      # first collection at start, then every interval from there; aligned to the
+      # clock, a 1h input would show nothing until the next full hour
+      round_interval = false
 
     [[outputs.influxdb]]
       urls = [{{ .Values.output.url | quote }}]
